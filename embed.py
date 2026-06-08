@@ -72,8 +72,28 @@ def embed_and_store(chunks):
 
 
 # ---------------------------------------------------------------------------
-# Retrieval
+# Retrieval — lazy singletons so the model loads once per process,
+# not once per query (avoids 3-5s startup overhead in the Gradio app)
 # ---------------------------------------------------------------------------
+
+_model = None
+_collection = None
+
+
+def _get_model():
+    global _model
+    if _model is None:
+        _model = SentenceTransformer(EMBED_MODEL)
+    return _model
+
+
+def _get_collection():
+    global _collection
+    if _collection is None:
+        client = chromadb.PersistentClient(path=CHROMA_DIR)
+        _collection = client.get_collection(COLLECTION_NAME)
+    return _collection
+
 
 def retrieve(query: str, k: int = TOP_K):
     """
@@ -82,12 +102,8 @@ def retrieve(query: str, k: int = TOP_K):
     Returns a list of dicts: {text, source_url, distance}
     Distance is cosine distance (lower = more similar).
     """
-    model = SentenceTransformer(EMBED_MODEL)
-    client = chromadb.PersistentClient(path=CHROMA_DIR)
-    collection = client.get_collection(COLLECTION_NAME)
-
-    query_embedding = model.encode([query])[0].tolist()
-    results = collection.query(
+    query_embedding = _get_model().encode([query])[0].tolist()
+    results = _get_collection().query(
         query_embeddings=[query_embedding],
         n_results=k,
         include=["documents", "metadatas", "distances"],
