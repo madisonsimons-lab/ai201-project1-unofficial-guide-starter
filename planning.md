@@ -44,88 +44,108 @@ Student experiences with campus dining halls across multiple US universities. Of
 
 ## Chunking Strategy
 
-<!-- How will you split documents into chunks?
-     State your chunk size (in tokens or characters), overlap size, and explain why those
-     numbers fit the structure of your documents.
-     A review-heavy corpus warrants different chunking than a long FAQ. -->
+**Chunk size:** 200 characters
 
-**Chunk size:**
+**Overlap:** 50 characters
 
-**Overlap:**
+**Reasoning:** The corpus is mixed: short Yelp reviews (often 1–4 sentences, ~100–300 characters total) and longer student newspaper articles (many paragraphs). At 200 characters, a complete short review fits in one or two chunks and stays intact. Newspaper articles get split into roughly paragraph-sized pieces that remain topically focused. The 50-character overlap ensures that a key claim sitting at a chunk boundary — e.g., a sentence that starts in one chunk and finishes in the next — can still be retrieved by either chunk. Without overlap, a split sentence produces two useless fragments that neither retrieves well.
 
-**Reasoning:**
+The main risk of 200-character chunks: some Yelp reviews are longer than 200 characters, so a review's main claim (e.g., "The food is terrible") may land in chunk N while the supporting detail (e.g., "everything is overcooked and overpriced") lands in chunk N+1. The 50-character overlap partially mitigates this but doesn't fully solve it. If retrieval quality is low during evaluation, increasing chunk size to 400–500 characters is the first adjustment to try.
 
 ---
 
 ## Retrieval Approach
 
-<!-- Which embedding model are you using (e.g., all-MiniLM-L6-v2 via sentence-transformers)?
-     How many chunks will you retrieve per query (top-k)?
-     If you were deploying this for real users and cost wasn't a constraint, what tradeoffs
-     would you weigh in choosing a different embedding model — context length, multilingual
-     support, accuracy on domain-specific text, latency? -->
+**Embedding model:** `all-MiniLM-L6-v2` via `sentence-transformers`
 
-**Embedding model:**
+**Top-k:** 3
 
-**Top-k:**
+**Reasoning:** `all-MiniLM-L6-v2` is fast, runs locally with no API cost, and handles general-purpose semantic similarity well. At 200-character chunks, its 256-token context limit is not a constraint — all chunks fit comfortably. top-3 gives the LLM enough context to synthesize an answer without flooding the prompt with off-topic chunks. Since sources cover 10+ distinct schools, a single query is unlikely to be answered by more than 3 chunks anyway.
 
-**Production tradeoff reflection:**
+**Production tradeoff reflection:** For real users I would evaluate two alternatives. First, `text-embedding-3-large` (OpenAI) — higher dimensional embeddings that tend to perform better on informal, opinion-rich text like dining hall reviews, where slang ("swipe," "meal plan," "dining dollars") can confuse a general-purpose model. Cost: ~$0.13/1M tokens, negligible at this corpus size but non-trivial at scale. Second, a model with longer context (e.g., `nomic-embed-text`, 8192-token limit) would matter if I switched to larger chunks — but at 200 characters it's irrelevant. Multilingual support is not a priority here since all sources are English. Latency: local inference with MiniLM is ~5–20ms per query; OpenAI API adds ~100–300ms per call, which matters for an interactive interface.
 
 ---
 
 ## Evaluation Plan
 
-<!-- List your 5 test questions with their expected correct answers.
-     Questions should be specific enough that you can judge whether the system's response
-     is right or wrong. "What are good dining halls?" is too vague.
-     "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
+> **Note:** Expected answers below are drafted from known article titles and topics. Verify each against the actual fetched document text in Milestone 3 and update if the source says something different.
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| 1 | What dining hall does the Cornell Daily Sun name as Cornell's best? | The article specifically names Abou-Alfa as Cornell's best dining hall. |
+| 2 | What do University of Miami students say about vegan options on campus? | The Miami Hurricane reports that vegan-friendly options at UM have been increasing, with students noting improvements at Hecht-Stanford dining. |
+| 3 | What late-night food options does BU Today describe for hungry students after hours? | BU Today lists specific on-campus locations (e.g., The George Sherman Union late-night options) available after normal dining hall hours. |
+| 4 | How do Harvard students describe the food quality changes after HUDS updated its menu? | The Crimson article captures student complaints about specific menu changes — dishes removed or altered — that students considered a downgrade. |
+| 5 | What does the Columbia Spectator recommend for students who want a late-night snack on campus? | The Spectator's ultimate guide mentions JJ's Place as Columbia's late-night dining option, open when other dining halls are closed. |
 
 ---
 
 ## Anticipated Challenges
 
-<!-- What could go wrong? Name at least two specific risks with reasoning.
-     Consider: noisy or inconsistent documents, missing source attribution, off-topic
-     retrieval, chunks that split key information across boundaries. -->
+1. **Chunk boundary splits within short Yelp reviews.** At 200 characters, a Yelp review like "The food is genuinely terrible — long lines, small portions, and nothing is fresh" will get split. The first chunk retrieves on "terrible" but doesn't include the reasons. The second chunk has the reasons but no strong negative signal. Neither chunk alone fully answers "what do students complain about at EVK?" The 50-character overlap helps but doesn't fully solve it. Mitigation: if retrieval quality is low for Yelp-sourced questions, consider chunking Yelp reviews as atomic units (one review = one chunk) regardless of character count.
 
-1.
-
-2.
+2. **Corpus skew toward Harvard sources (3 articles) causing over-retrieval from one school.** Queries about general dining trends may pull all 3 returned chunks from Harvard documents, leaving questions about Cornell, USC, or Texas A&M unanswered even though those documents exist. The LLM will then give a Harvard-centric answer to a general question. Mitigation: track source distribution in retrieved chunks during evaluation. If skew is severe, add a metadata filter to cap chunks per source URL to 1 per query.
 
 ---
 
 ## Architecture
 
-<!-- Draw a diagram of your pipeline showing the five stages:
-     Document Ingestion → Chunking → Embedding + Vector Store → Retrieval → Generation
-     Label each stage with the tool or library you're using.
-     You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
-     You'll use this diagram as context when prompting AI tools to implement each stage. -->
+```
+User Query
+    │
+    ▼
+┌─────────────────────────────────────────────────────────────┐
+│  1. DOCUMENT INGESTION                                      │
+│     Tool: requests + BeautifulSoup (Python)                 │
+│     Input:  15 URLs (student newspapers, Yelp, blogs)       │
+│     Output: raw text files saved to documents/              │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  2. CHUNKING                                                │
+│     Tool: custom chunk_text() in Python                     │
+│     chunk_size=200 characters, overlap=50 characters        │
+│     Output: list of (chunk_text, source_url) pairs          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  3. EMBEDDING + VECTOR STORE                                │
+│     Embedding model: all-MiniLM-L6-v2 (sentence-transformers│
+│     Vector store:    ChromaDB (local, persistent)           │
+│     Metadata stored: source URL per chunk                   │
+│     Output: persisted ChromaDB collection on disk           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+              ┌────────────┘  ← query embedded with same model
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  4. RETRIEVAL                                               │
+│     Tool: ChromaDB .query() — cosine similarity             │
+│     Returns: top-3 chunks + source URLs as metadata         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│  5. GENERATION                                              │
+│     LLM: Groq API (llama-3 or mixtral, fast inference)      │
+│     System prompt: grounded — answer only from chunks,      │
+│                    cite source URL for each claim           │
+│     Output: answer with inline source citations             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## AI Tool Plan
 
-<!-- For each part of the pipeline below, describe:
-     - Which AI tool you plan to use (Claude, Copilot, ChatGPT, etc.)
-     - What you'll give it as input (which sections of this planning.md, which requirements)
-     - What you expect it to produce
-     - How you'll verify the output matches your spec
-
-     "I'll use AI to help me code" is not a plan.
-     "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
-     with my specified chunk size and overlap" is a plan. -->
-
 **Milestone 3 — Ingestion and chunking:**
+I'll give Claude this planning.md's Documents table and Chunking Strategy section, plus the requirement that each chunk must store its source URL as metadata. I'll ask it to implement `ingest.py` containing two functions: `fetch_document(url) -> str` (fetches and strips HTML from a URL using requests + BeautifulSoup) and `chunk_text(text, source_url, chunk_size=200, overlap=50) -> list[dict]` (returns a list of `{text, source_url}` dicts). I'll verify by running it on one URL, printing the first 5 chunks, and manually checking that each chunk is ~200 characters with ~50-character overlap visible at boundaries.
 
 **Milestone 4 — Embedding and retrieval:**
+I'll give Claude the Retrieval Approach section and Architecture diagram, and ask it to implement `embed_and_store(chunks: list[dict])` (embeds all chunks with `all-MiniLM-L6-v2` and stores them in a local ChromaDB collection with source URL as metadata) and `retrieve(query: str, k: int = 3) -> list[dict]` (returns top-k chunks with text and source URL). I'll verify by running a known query ("what do students think about Cornell dining") and checking that at least one of the returned chunks is from the Cornell Daily Sun source.
 
 **Milestone 5 — Generation and interface:**
+I'll give Claude the full planning.md plus the Groq SDK docs, and ask it to implement `generate_response(query: str, chunks: list[dict]) -> str` using Groq. The system prompt must: (1) instruct the model to answer only from the provided chunks, (2) refuse to answer if the chunks are not relevant, and (3) cite the source URL for every factual claim. I'll verify by running a query whose answer is NOT in the corpus (e.g., "What is the food like at MIT?") and confirming the model does not hallucinate an answer.
