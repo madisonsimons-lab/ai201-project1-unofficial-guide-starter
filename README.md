@@ -9,31 +9,29 @@
 
 ## Domain
 
-<!-- What topic or category of knowledge does your system cover?
-     Why is this knowledge valuable, and why is it hard to find through official channels?
-     Example: "Student reviews of CS professors at [university] — useful because official
-     course descriptions don't reflect teaching style, exam difficulty, or workload." -->
+Student experiences with campus dining halls across multiple US universities. Official dining pages list hours and menus but never capture the real student view — which dining halls are worth swiping into, which are overpriced, what the vegetarian options actually taste like, or how brutal the lunch rush is. That knowledge is scattered across student newspapers, Yelp reviews, and blog posts, making it nearly impossible to find in one place.
 
 ---
 
 ## Document Sources
 
-<!-- List every source you collected documents from.
-     Be specific: include URLs, subreddit names, forum thread titles, or file names.
-     Aim for variety — sources that together cover different subtopics or perspectives. -->
-
 | # | Source | Type | URL or file path |
 |---|--------|------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | Columbia Spectator | Student newspaper | https://www.columbiaspectator.com/spectrum/2024/08/21/the-ultimate-guide-to-columbias-dining-halls/ |
+| 2 | Harvard Crimson | Student newspaper | https://www.thecrimson.com/article/2022/10/4/A-Truly-Unbiased-Ranking-of-the-12-Harvard-Dining-Halls/ |
+| 3 | Harvard Crimson | Student newspaper | https://www.thecrimson.com/article/2024/10/11/huds-food-influence/ |
+| 4 | Harvard Crimson | Student newspaper | https://www.thecrimson.com/article/2025/2/12/huds-menu-updates/ |
+| 5 | Cornell Daily Sun | Student newspaper | https://www.cornellsun.com/article/2025/09/abou-alfa-cornells-best-dining-hall |
+| 6 | Cornell Daily Sun | Student newspaper | https://cornellsun.com/2020/09/18/the-freshman-dining-hall-experience/ |
+| 7 | Daily Californian | Student newspaper | https://dailycal.org/2017/02/23/dining-hall-power-rankings/ |
+| 8 | Amherst Student | Student newspaper | https://amherststudent.com/article/umass-dining-a-comprehensive-review/ |
+| 9 | The Miami Hurricane | Student newspaper | https://themiamihurricane.com/2018/09/25/vegan-friendly-options-increasing-in-campus-dining-halls/ |
+| 10 | Yelp — EVK @ USC | User reviews | https://www.yelp.com/biz/evk-dining-hall-usc-los-angeles-2 |
+| 11 | Yelp — UCSC College Nine & Ten | User reviews | https://www.yelp.com/biz/college-nine-and-ten-dining-hall-santa-cruz |
+| 12 | Yelp — Sbisa Dining, Texas A&M | User reviews | https://www.yelp.com/biz/sbisa-dining-hall-college-station |
+| 13 | Her Campus BU | Student blog | https://www.hercampus.com/school/bu/bu-dining-halls-ranked/ |
+| 14 | BU Today | University news | https://www.bu.edu/articles/2019/late-night-food-boston-university-campus/ |
+| 15 | Niche.com | Aggregated reviews | https://www.niche.com/colleges/search/best-college-food/ |
 
 ---
 

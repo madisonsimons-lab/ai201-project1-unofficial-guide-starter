@@ -9,27 +9,36 @@
 
 ## Domain
 
-<!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
+Student experiences with campus dining halls across multiple US universities. Official dining pages list hours and menus but never capture the real student view — which dining halls are worth swiping into, which are overpriced, what the vegetarian options actually taste like, or how brutal the lunch rush is. That knowledge is scattered across student newspapers, Yelp reviews, and Reddit threads, making it nearly impossible to find at a glance.
+
+**Sample questions this system should handle:**
+1. Which dining halls do students at Harvard actually recommend?
+2. Are the vegetarian/vegan options at major universities getting better?
+3. What do students say about meal plan value vs. cost?
+4. Which dining hall has the best late-night food?
+5. What are the most common complaints about campus dining across schools?
 
 ---
 
 ## Documents
 
-<!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
-     Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
-
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | Columbia Spectator | Ultimate guide to Columbia's dining halls — covers all options with student perspective | https://www.columbiaspectator.com/spectrum/2024/08/21/the-ultimate-guide-to-columbias-dining-halls/ |
+| 2 | Harvard Crimson | Ranking of all 12 Harvard dining halls with student reviews | https://www.thecrimson.com/article/2022/10/4/A-Truly-Unbiased-Ranking-of-the-12-Harvard-Dining-Halls/ |
+| 3 | Harvard Crimson | How Harvard dining services influence what students actually eat | https://www.thecrimson.com/article/2024/10/11/huds-food-influence/ |
+| 4 | Harvard Crimson | Student complaints about HUDS menu updates | https://www.thecrimson.com/article/2025/2/12/huds-menu-updates/ |
+| 5 | Cornell Daily Sun | "Cornell's Best Dining Hall" — student opinion piece | https://www.cornellsun.com/article/2025/09/abou-alfa-cornells-best-dining-hall |
+| 6 | Cornell Daily Sun | Freshman dining hall experience with student perspectives | https://cornellsun.com/2020/09/18/the-freshman-dining-hall-experience/ |
+| 7 | Daily Californian | UC Berkeley dining hall power rankings | https://dailycal.org/2017/02/23/dining-hall-power-rankings/ |
+| 8 | Amherst Student | UMass Dining comprehensive review | https://amherststudent.com/article/umass-dining-a-comprehensive-review/ |
+| 9 | The Miami Hurricane | Vegan-friendly options at University of Miami dining halls | https://themiamihurricane.com/2018/09/25/vegan-friendly-options-increasing-in-campus-dining-halls/ |
+| 10 | Yelp | EVK Dining Hall @ USC — student reviews | https://www.yelp.com/biz/evk-dining-hall-usc-los-angeles-2 |
+| 11 | Yelp | College Nine & Ten Dining Hall, UC Santa Cruz — student reviews | https://www.yelp.com/biz/college-nine-and-ten-dining-hall-santa-cruz |
+| 12 | Yelp | Sbisa Dining Hall, Texas A&M — student reviews | https://www.yelp.com/biz/sbisa-dining-hall-college-station |
+| 13 | Her Campus BU | Boston University dining halls ranked by students | https://www.hercampus.com/school/bu/bu-dining-halls-ranked/ |
+| 14 | BU Today | Late-night food options at Boston University | https://www.bu.edu/articles/2019/late-night-food-boston-university-campus/ |
+| 15 | Niche.com | Best college food & dining in America — aggregated student reviews | https://www.niche.com/colleges/search/best-college-food/ |
 
 ---
 
