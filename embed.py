@@ -9,7 +9,10 @@ Spec source: planning.md — Retrieval Approach section.
 
 Usage:
     python embed.py          # embed all chunks from documents/chunks.json
-    python embed.py --test   # run retrieval tests against 3 eval-plan queries
+    python embed.py --test   # run retrieval-only tests against 3 eval-plan queries
+
+For a full retrieval + generation evaluation across all 5 eval-plan questions,
+with results persisted to a reviewable file, see evaluate.py instead.
 """
 
 import argparse

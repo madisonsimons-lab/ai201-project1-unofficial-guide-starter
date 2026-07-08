@@ -88,6 +88,8 @@ The model temperature is set to 0.1 (near-deterministic) to reduce the creative 
 
 ## Evaluation Report
 
+Run `python evaluate.py` to regenerate this table from scratch — it runs all 5 eval-plan questions through the full retrieval + generation pipeline and writes the complete, unabridged transcript (retrieved chunks, distances, sources, and generated answers) to [`eval_report.md`](eval_report.md). The summary below is a hand-annotated digest of that artifact; `eval_report.md` is the source of truth if the two ever disagree.
+
 | # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
 |---|----------|-----------------|------------------------------|-------------------|-------------------|
 | 1 | What dining hall does the Cornell Daily Sun name as Cornell's best? | Abou-Alfa | Okenshields, citing [Doc 3] which contained the article title alongside a sentence about Okenshields being "subject to constant ridicule" | Relevant (all chunks from cornellsun.com, dist 0.35–0.39) | Inaccurate |
